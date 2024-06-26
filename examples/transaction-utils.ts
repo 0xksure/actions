@@ -8,10 +8,10 @@ import {
 
 const environment = process.env.ENVIRONMENT || 'development';
 
-const rpcUrl =
-  environment === 'production'
-    ? process.env.RPC_URL || clusterApiUrl('mainnet-beta')
-    : process.env.RPC_URL || clusterApiUrl('devnet');
+const rpcUrl = process.env.RPC_URL
+if (!rpcUrl) {
+  throw new Error('RPC_URL is not set');
+}
 
 export const connection = new Connection(rpcUrl);
 

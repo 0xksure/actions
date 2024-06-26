@@ -125,8 +125,8 @@ app.openapi(
         const response: ActionsSpecGetResponse = {
             icon: SANDBLIZZARD_LOGO,
             label: `Create bounty `,
-            title: `Create bounty for ${team} in ${organization} `,
-            description: `This will create a bounty on the github issue ${githubUrl} for ${token}`,
+            title: `Create bounty in repository ${team} in ${organization} `,
+            description: `This will create a bounty denominated in ${token} on the github issue ${githubUrl}`,
             links: {
                 actions: [
                     {
@@ -262,24 +262,20 @@ app.openapi(
         }
 
 
-        console.log(JSON.stringify(inputToken))
-        // parse githubUrl into organization and team based on the url
-
         const bountySdk = new bountysdk.BountySdk(new PublicKey(account), connection);
         const res = await bountySdk.createBounty({
             id: 1,
             bountyAmount: new BN(amount),
             bountyCreator: new PublicKey(account),
-            mint: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+            mint: new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"),
             platform: "github",
             organization: organization,
             team: team,
             domainType: "github",
         });
 
-
         const response: ActionsSpecPostResponse = {
-            transaction: res.vtx.serialize().toString(),
+            transaction: Buffer.from(res.vtx.serialize()).toString('base64'),
         };
         return c.json(response);
     },
